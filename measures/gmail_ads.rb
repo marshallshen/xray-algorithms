@@ -7,6 +7,11 @@ module GmailAds
   #   - bind experiment with accounts
   #   - run experiment
   #   - analyze experiment
+  class << self
+    def run!(options={})
+      true
+    end
+  end
 end
 
 class Experiment
