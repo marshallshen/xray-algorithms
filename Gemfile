@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+################## Legacy Gems
 gem 'mongoid'
 gem 'bson_ext'
 gem 'rinruby'
@@ -26,6 +27,8 @@ gem 'descriptive_statistics'
 gem 'ruby-prof'
 
 gem 'devise'
+
+################## Gems added for measures
 
 group :development, :test do
   gem 'rspec'
