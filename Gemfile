@@ -29,9 +29,11 @@ gem 'ruby-prof'
 gem 'devise'
 
 ################## Gems added for measures
+gem 'workflow'
 
 group :development, :test do
   gem 'rspec'
+  gem 'pry'
 end
 
 
