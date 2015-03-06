@@ -1,0 +1,3 @@
+class YtSideAd < SnapshotCluster
+
+end

@@ -102,7 +102,7 @@ class InterestScraper
   end
 end
 
-config = YAML::load_file(File.join(__dir__, 'config.yml'))
+config = YAML::load_file('measures/config.yml')
 settings = {
     login: config['login'],
     passwd: config['passwd']
@@ -113,4 +113,4 @@ sleep(2)
 s.get_youtube_video_ads('finance')
 sleep(2)
 interests = s.get_interests!
-pp interests.inspect
+puts interests.inspect

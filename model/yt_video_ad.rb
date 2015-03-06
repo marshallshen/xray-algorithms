@@ -1,0 +1,3 @@
+class YtVideoAd < SnapshotCluster
+
+end

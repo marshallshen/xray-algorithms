@@ -1,0 +1,3 @@
+class YtSideAdSnapshot < Snapshot
+
+end

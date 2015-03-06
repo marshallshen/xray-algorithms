@@ -1,0 +1,3 @@
+class ContextSite < SnapshotCluster
+
+end
