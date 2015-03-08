@@ -1,0 +1,3 @@
+class YtSearch < SnapshotCluster
+
+end

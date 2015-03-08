@@ -1,0 +1,3 @@
+class ContextSiteAd < SnapshotCluster
+
+end

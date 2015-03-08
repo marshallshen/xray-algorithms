@@ -1,0 +1,3 @@
+class ContextSiteAdSnapshot < Snapshot
+
+end

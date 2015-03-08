@@ -30,6 +30,8 @@ gem 'devise'
 
 ################## Gems added for measures
 
+gem 'poltergeist'
+
 group :development, :test do
   gem 'rspec'
 end

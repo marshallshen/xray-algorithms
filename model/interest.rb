@@ -1,0 +1,3 @@
+class Interest < SnapshotCluster
+
+end
