@@ -32,7 +32,24 @@ class InterestScraper
     end
 
     google.uncheck 'Stay signed in'
+    require 'pry';binding.pry
     google.click_on 'Sign in'
+  ensure
+    enable_interest!
+  end
+
+  def enable_interest!
+    google.visit(PREFERENCES_ENDPOINT)
+    sleep(1)
+      #google.driver.save_screenshot("#{Time.now.to_s}_before.png", :full => true)
+    begin
+      return if !google.has_selector?(:xpath, "/html/body/div[6]/div/div[3]/div[7]/div[2]/div[2]/div[2]/form[1]/div[1]")
+
+      google.find(:xpath, "/html/body/div[6]/div/div[3]/div[7]/div[2]/div[2]/div[2]/form[1]/div[1]").click
+      #google.driver.save_screenshot("#{Time.now.to_s}_after_success.png", :full => true)
+    rescue
+      #google.save_screenshot("#{Time.now.to_s}_after_error.png", :full => true)
+    end
   end
 
   def get_interests!
@@ -81,10 +98,10 @@ class InterestScraper
          short_url: short_url,
          by: by,
          description: description})
-       end
+      end
     rescue
       puts 'died here'
-     end
+    end
 
     video_ad_list.each do |ad|
       ad.each_pair do |k, v|
@@ -97,20 +114,31 @@ class InterestScraper
   end
 
   def clean!
-    google.driver.browser.manage.delete_all_cookies
+    google.driver.clear_cookies
     google.reset!
   end
 end
-
 config = YAML::load_file('measures/config.yml')
-settings = {
-    login: config['login'],
-    passwd: config['passwd']
-}
-s = InterestScraper.new(settings)
+accounts = config['accounts']
+settings = accounts.map do |account|
+  {
+    login: account['login'],
+    passwd: account['passwd']
+  }
+end
+s = InterestScraper.new(settings.last)
 s.login!
 sleep(2)
-s.get_youtube_video_ads('finance')
+s.get_youtube_video_ads('music')
+sleep(2)
+interests = s.get_interests!
+puts interests.inspect
+s.clean!
+
+s = InterestScraper.new(settings.first)
+s.login!
+sleep(2)
+s.get_youtube_video_ads('food')
 sleep(2)
 interests = s.get_interests!
 puts interests.inspect
