@@ -32,7 +32,6 @@ class InterestScraper
     end
 
     google.uncheck 'Stay signed in'
-    require 'pry';binding.pry
     google.click_on 'Sign in'
   ensure
     enable_interest!
@@ -118,27 +117,27 @@ class InterestScraper
     google.reset!
   end
 end
-config = YAML::load_file('measures/config.yml')
-accounts = config['accounts']
-settings = accounts.map do |account|
-  {
-    login: account['login'],
-    passwd: account['passwd']
-  }
-end
-s = InterestScraper.new(settings.last)
-s.login!
-sleep(2)
-s.get_youtube_video_ads('music')
-sleep(2)
-interests = s.get_interests!
-puts interests.inspect
-s.clean!
-
-s = InterestScraper.new(settings.first)
-s.login!
-sleep(2)
-s.get_youtube_video_ads('food')
-sleep(2)
-interests = s.get_interests!
-puts interests.inspect
+#config = YAML::load_file('measures/config.yml')
+#accounts = config['accounts']
+#settings = accounts.map do |account|
+#  {
+#    login: account['login'],
+#    passwd: account['passwd']
+#  }
+#end
+#s = InterestScraper.new(settings.last)
+#s.login!
+#sleep(2)
+#s.get_youtube_video_ads('music')
+#sleep(2)
+#interests = s.get_interests!
+#puts interests.inspect
+#s.clean!
+#
+#s = InterestScraper.new(settings.first)
+#s.login!
+#sleep(2)
+#s.get_youtube_video_ads('food')
+#sleep(2)
+#interests = s.get_interests!
+#puts interests.inspect
