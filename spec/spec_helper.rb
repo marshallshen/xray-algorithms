@@ -1,1 +1,1 @@
-require_relative '../app'
+require_relative '../measures/cross_service'
