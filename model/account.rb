@@ -12,9 +12,9 @@ class Account
   def self.master_account
     exp = Experiment.where(:name => Mongoid.tenant_name).first
     if exp == nil
-      Account.where(:is_master => true).first
+      nil
     else
-      Account.where( id: exp.master_account ).first
+      Account.where( id: exp.master_account).first
     end
   end
 end

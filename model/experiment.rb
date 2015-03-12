@@ -8,13 +8,13 @@ class Experiment
   field :name
   index({ name: 1 }, { :unique => true })
   field :type
-  field :account_number  # uncludes +1 for the master
-  field :e_perc_a  # puts each email in :e_perc_a * :account_number accounts
-  field :emails  # an array of emails groupes in threads
-  field :fill_up_emails, :default => []  # an array of emails sent to all accounts
+  field :account_number  # includes +1 for the master
+  field :i_perc_a  # puts each input in :i_perc_a * :account_number accounts
+  field :inputs  # an array of inputs
+  field :fill_up_inputs, :default => []  # an array of emails sent to all accounts
   field :master_account  # string, id of the master account
-  field :master_emails
-  field :e_a_assignments
+  field :master_inputs
+  field :i_a_assignments
   field :measurements, :default => []
   field :has_master, :default => true
   field :analyzed, :default => false
@@ -23,21 +23,21 @@ class Experiment
     Experiment.where( :name => Mongoid.tenant_name ).first
   end
 
-  class_attribute :exps_accs_emails_map
-  def self.curr_accs_emails_map
-    self.exps_accs_emails_map ||= {}
-    name = self.current.name
-    unless self.exps_accs_emails_map[name]
-      self.exps_accs_emails_map[name] = {}
-      Account.each do |a|
-        emails_in = AccountEmail.where(account: a).uniq.map(&:email)
-                                .select! {|em| em.cluster_targeting_id != "garbage"}
-        self.exps_accs_emails_map[name] ||= []
-        self.exps_accs_emails_map[name] [a.id] = emails_in
-      end
-    end
-    return self.exps_accs_emails_map[name]
-  end
+#  class_attribute :exps_accs_emails_map
+#  def self.curr_accs_emails_map
+#    self.exps_accs_emails_map ||= {}
+#    name = self.current.name
+#    unless self.exps_accs_emails_map[name]
+#      self.exps_accs_emails_map[name] = {}
+#      Account.each do |a|
+#        emails_in = AccountEmail.where(account: a).uniq.map(&:email)
+#                                .select! {|em| em.cluster_targeting_id != "garbage"}
+#        self.exps_accs_emails_map[name] ||= []
+#        self.exps_accs_emails_map[name] [a.id] = emails_in
+#      end
+#    end
+#    return self.exps_accs_emails_map[name]
+#  end
 
   def self.duplicate_exp(name, new_name)
     exp = self.where( name: name ).first
@@ -64,18 +64,25 @@ class Experiment
   def self.duplicate_snapshots(name, new_name)
     exp_new = self.where(name: new_name).first
 
-    ad_snaps = Mongoid.with_tenant(name) do
-      AdSnapshot.all.map { |a| Hash[a.attributes] }
+    yt_video_ad_snaps = Mongoid.with_tenant(name) do
+      YtVideoAdSnapshot.all.map { |a| Hash[a.attributes] }
     end
     Mongoid.with_tenant(new_name) do
-      ad_snaps.each { |a| AdSnapshot.new(a).tap { |na| na.id = a['_id'] }.save }
+      yt_video_ad_snaps.each { |a| YtVideoAdSnapshot.new(a).tap { |na| na.id = a['_id'] }.save }
     end
 
-    email_snaps = Mongoid.with_tenant(name) do
-      EmailSnapshot.all.map { |a| Hash[a.attributes] }
+    yt_side_ad_snaps = Mongoid.with_tenant(name) do
+      YtSideAdSnapshot.all.map { |a| Hash[a.attributes] }
     end
     Mongoid.with_tenant(new_name) do
-      email_snaps.each { |a| EmailSnapshot.new(a).tap { |na| na.id = a['_id'] }.save }
+      yt_side_ad_snaps.each { |a| YtSideAdSnapshot.new(a).tap { |na| na.id = a['_id'] }.save }
+    end
+
+    context_site_ad_snaps = Mongoid.with_tenant(name) do
+      ContextSiteAdSnapshot.all.map { |a| Hash[a.attributes] }
+    end
+    Mongoid.with_tenant(new_name) do
+      context_site_ad_snaps.each { |a| ContextSiteAdSnapshot.new(a).tap { |na| na.id = a['_id'] }.save }
     end
 
     exp_new.save

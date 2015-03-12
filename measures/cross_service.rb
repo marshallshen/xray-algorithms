@@ -20,7 +20,7 @@ module Measure
         ['music', 'food', 'dogs']
       end
 
-      def saerch_across_web
+      def search_across_web
         p "TODO: search across web"
       end
 
